@@ -1,8 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
+import RoleRoute from "./RoleRoute.jsx";
 
 import Layout from "../components/Layout/Layout.jsx";
 import Login from "../pages/Login/Login.jsx";
+import Register from "../pages/Auth/Register.jsx";
+import ForgotPassword from "../pages/Auth/ForgotPassword.jsx";
+import ResetPassword from "../pages/Auth/ResetPassword.jsx";
+import Unauthorized from "../pages/Unauthorized.jsx";
 import Dashboard from "../pages/Dashboard/Dashboard.jsx";
 
 import VehicleList from "../pages/Vehicles/List.jsx";
@@ -29,6 +34,10 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
 
       <Route
         element={
@@ -46,9 +55,23 @@ export default function AppRoutes() {
         <Route path="/vehicles/:id/edit" element={<VehicleEdit />} />
 
         <Route path="/workshops" element={<WorkshopList />} />
-        <Route path="/workshops/new" element={<WorkshopCreate />} />
+        <Route
+          path="/workshops/new"
+          element={
+            <RoleRoute roles={["admin"]}>
+              <WorkshopCreate />
+            </RoleRoute>
+          }
+        />
         <Route path="/workshops/:id" element={<WorkshopDetails />} />
-        <Route path="/workshops/:id/edit" element={<WorkshopEdit />} />
+        <Route
+          path="/workshops/:id/edit"
+          element={
+            <RoleRoute roles={["admin"]}>
+              <WorkshopEdit />
+            </RoleRoute>
+          }
+        />
 
         <Route path="/maintenances" element={<MaintenanceList />} />
         <Route path="/maintenances/new" element={<MaintenanceCreate />} />
