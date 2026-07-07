@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { FiTool, FiMail, FiLock } from "react-icons/fi";
 import Input from "../../components/Input/Input.jsx";
 import Button from "../../components/Button/Button.jsx";
@@ -80,17 +80,12 @@ export default function Login() {
               {loading ? "Entrando…" : "Entrar"}
             </Button>
           </form>
-          <p
-            style={{
-              fontSize: 12,
-              color: "var(--op-text-muted)",
-              marginTop: 16,
-              textAlign: "center",
-            }}
-          >
-            Suas credenciais são enviadas com segurança e o token JWT é armazenado apenas neste
-            dispositivo.
-          </p>
+          <div style={{ marginTop: 16, textAlign: "center", fontSize: 13, display: "flex", flexDirection: "column", gap: 6 }}>
+            <Link to="/forgot-password">Esqueci minha senha</Link>
+            <span style={{ color: "var(--op-text-muted)" }}>
+              Não tem conta? <Link to="/register">Criar conta</Link>
+            </span>
+          </div>
         </div>
       </div>
     </div>
