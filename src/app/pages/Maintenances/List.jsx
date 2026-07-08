@@ -214,7 +214,9 @@ export default function MaintenanceList() {
             </div>
           )}
         </Card>
+        </div>
       )}
+
 
       <Table
         loading={loading}
