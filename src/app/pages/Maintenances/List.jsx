@@ -130,7 +130,9 @@ export default function MaintenanceList() {
       </div>
 
       {showFilters && (
-        <Card title="Filtros" style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: 16 }}>
+        <Card title="Filtros">
+
           <div
             style={{
               display: "grid",
