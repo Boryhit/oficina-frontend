@@ -18,9 +18,9 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
   const { workshops, fetchAll: fetchWorkshops } = useWorkshops();
 
   const [form, setForm] = useState({
-    descricao: "",
+    description: "",
     data: "",
-    valor: "",
+    value: "",
     status: "pendente",
     vehicleId: "",
     workshopId: "",
@@ -37,12 +37,11 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
     const rawDate = initial.data || initial.date;
     const iso = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : "";
     setForm({
-      descricao: initial.descricao || initial.description || "",
+      description: initial.descricao || initial.description || "",
       data: iso,
-      valor: initial.valor ?? initial.value ?? "",
+      value: initial.valor ?? initial.value ?? "",
       status: (initial.status || "pendente").toLowerCase(),
       vehicleId:
-        initial.vehicleId ||
         initial.vehicle_id ||
         initial.vehicle?.id ||
         initial.vehicle?._id ||
@@ -58,9 +57,9 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
 
   const validate = () => {
     const e = {};
-    if (!form.descricao.trim()) e.descricao = "Descrição obrigatória";
+    if (!form.description.trim()) e.description = "Descrição obrigatória";
     if (!form.data) e.data = "Data obrigatória";
-    if (form.valor === "" || Number(form.valor) < 0) e.valor = "Valor inválido";
+    if (form.value === "" || Number(form.value) < 0) e.value = "Valor inválido";
     if (!form.vehicleId) e.vehicleId = "Selecione um veículo";
     if (!form.workshopId) e.workshopId = "Selecione uma oficina";
     setErrors(e);
@@ -71,9 +70,9 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
     ev.preventDefault();
     if (!validate()) return;
     onSubmit({
-      descricao: form.descricao,
+      description: form.description,
       data: form.data,
-      valor: Number(form.valor),
+      value: Number(form.value),
       status: form.status,
       vehicleId: form.vehicleId,
       workshopId: form.workshopId,
@@ -86,10 +85,10 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
         <Input
           label="Descrição"
           required
-          value={form.descricao}
-          onChange={(e) => setForm({ ...form, descricao: e.target.value })}
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
           placeholder="Ex: Troca de óleo e filtros"
-          error={errors.descricao}
+          error={errors.description}
         />
         <Input
           label="Data"
@@ -105,10 +104,10 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
           type="number"
           step="0.01"
           min="0"
-          value={form.valor}
-          onChange={(e) => setForm({ ...form, valor: e.target.value })}
+          value={form.value}
+          onChange={(e) => setForm({ ...form, value: e.target.value })}
           placeholder="0,00"
-          error={errors.valor}
+          error={errors.value}
         />
         <Select
           label="Status"
