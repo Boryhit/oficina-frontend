@@ -55,7 +55,7 @@ export default function WorkshopList() {
             key: "especialidades",
             label: "Especialidades",
             render: (r) => {
-              const arr = r.especialidades || r.specialties || [];
+              const arr = r.especialidades || r.specialities || r.specialties || [];
               if (!arr.length) return "—";
               return (
                 <div className="op-row" style={{ gap: 4 }}>

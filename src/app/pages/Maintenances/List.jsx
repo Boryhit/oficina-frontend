@@ -15,6 +15,11 @@ import { exportToCsv } from "../../utils/csv.js";
 
 const STATUS_OPTIONS = ["pendente", "em_andamento", "concluida", "cancelada"];
 
+const maintenanceDescription = (row) =>
+  row.descricao || row.description || row.services?.join?.(", ") || "—";
+
+const maintenanceValue = (row) => row.valor ?? row.value ?? row.totalCost ?? 0;
+
 export default function MaintenanceList() {
   const { maintenances, loading, fetchAll, remove } = useMaintenances();
   const { vehicles, fetchAll: fetchVehicles } = useVehicles();
@@ -64,7 +69,7 @@ export default function MaintenanceList() {
         to.setHours(23, 59, 59, 999);
         if (!d || d > to) return false;
       }
-      const val = Number(r.valor || r.value || 0);
+      const val = Number(maintenanceValue(r));
       if (fMin !== "" && val < Number(fMin)) return false;
       if (fMax !== "" && val > Number(fMax)) return false;
       return true;
@@ -80,9 +85,9 @@ export default function MaintenanceList() {
 
   const handleExport = () => {
     exportToCsv("manutencoes", filtered, [
-      { key: "descricao", label: "Descrição", render: (r) => r.descricao || r.description || "" },
+      { key: "descricao", label: "Descrição", render: (r) => maintenanceDescription(r) },
       { key: "data", label: "Data", render: (r) => formatDate(r.data || r.date) },
-      { key: "valor", label: "Valor", render: (r) => (r.valor ?? r.value ?? "") },
+      { key: "valor", label: "Valor", render: (r) => maintenanceValue(r) },
       { key: "status", label: "Status", render: (r) => r.status || "" },
       { key: "veiculo", label: "Veículo", render: (r) => vehicleLabel(r) },
       { key: "oficina", label: "Oficina", render: (r) => workshopLabel(r) },
@@ -92,7 +97,7 @@ export default function MaintenanceList() {
   const askRemove = async (row) => {
     const res = await Swal.fire({
       title: "Excluir manutenção?",
-      text: `"${row.descricao || row.description || "Registro"}" será removida.`,
+      text: `"${maintenanceDescription(row)}" será removida.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sim, excluir",
@@ -223,7 +228,7 @@ export default function MaintenanceList() {
         rows={filtered}
         searchPlaceholder="Buscar por descrição, veículo, oficina…"
         columns={[
-          { key: "descricao", label: "Descrição", render: (r) => r.descricao || r.description || "—" },
+          { key: "descricao", label: "Descrição", render: (r) => maintenanceDescription(r) },
           {
             key: "data",
             label: "Data",
@@ -233,8 +238,8 @@ export default function MaintenanceList() {
           {
             key: "valor",
             label: "Valor",
-            render: (r) => formatCurrency(r.valor || r.value),
-            sortAccessor: (r) => Number(r.valor || r.value || 0),
+            render: (r) => formatCurrency(maintenanceValue(r)),
+            sortAccessor: (r) => Number(maintenanceValue(r)),
           },
           { key: "status", label: "Status", render: (r) => <Badge status={r.status} /> },
           { key: "vehicle", label: "Veículo", render: (r) => vehicleLabel(r) },

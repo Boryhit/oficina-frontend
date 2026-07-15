@@ -33,7 +33,6 @@ export default function WorkshopForm({ initial, onSubmit, submitting, submitLabe
       name: form.nome,
       address: form.endereco,
       specialities: form.especialidades,
-      vehiclesId: form.vehiclesId,
     });
   };
 
