@@ -36,10 +36,11 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
     if (!initial) return;
     const rawDate = initial.data || initial.date;
     const iso = rawDate ? new Date(rawDate).toISOString().slice(0, 10) : "";
+    const services = initial.services || [];
     setForm({
-      description: initial.descricao || initial.description || "",
+      description: initial.descricao || initial.description || services.join(", ") || "",
       data: iso,
-      value: initial.valor ?? initial.value ?? "",
+      value: initial.valor ?? initial.value ?? initial.totalCost ?? "",
       status: (initial.status || "pendente").toLowerCase(),
       vehicleId:
         initial.vehicle_id ||
@@ -69,10 +70,15 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
   const handleSubmit = (ev) => {
     ev.preventDefault();
     if (!validate()) return;
+    const services = form.description
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
     onSubmit({
-      description: form.description,
-      data: form.data,
-      value: Number(form.value),
+      services,
+      date: form.data,
+      totalCost: Number(form.value),
       status: form.status,
       vehicleId: form.vehicleId,
       workshopId: form.workshopId,
@@ -87,7 +93,7 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
           required
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="Ex: Troca de óleo e filtros"
+          placeholder="Ex: Troca de óleo, Filtros"
           error={errors.description}
         />
         <Input

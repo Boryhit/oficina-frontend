@@ -56,10 +56,10 @@ export default function VehicleForm({ initial, onSubmit, submitting, submitLabel
     ev.preventDefault();
     if (!validate()) return;
     onSubmit({
-      placa: form.placa,
-      modelo: form.modelo,
-      ano: Number(form.ano),
-      proprietario: form.proprietario,
+      plate: form.placa,
+      model: form.modelo,
+      year: Number(form.ano),
+      owner: form.proprietario,
       maintenances: form.maintenances,
       maintenancesId: form.maintenances,
     });

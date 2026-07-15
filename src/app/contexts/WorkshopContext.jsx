@@ -16,7 +16,7 @@ export function WorkshopProvider({ children }) {
       const data = await workshopService.listar();
       setWorkshops(Array.isArray(data) ? data : data?.data || []);
     } catch (err) {
-      setError(err?.response?.data?.message || err.message);
+      setError(err?.response?.data?.message || err?.response?.data?.error || err.message);
       toast.error("Erro ao carregar oficinas");
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export function WorkshopProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao cadastrar oficina");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao cadastrar oficina");
         return false;
       }
     },
@@ -55,7 +55,7 @@ export function WorkshopProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao atualizar oficina");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao atualizar oficina");
         return false;
       }
     },
@@ -70,7 +70,7 @@ export function WorkshopProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao remover oficina");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao remover oficina");
         return false;
       }
     },
