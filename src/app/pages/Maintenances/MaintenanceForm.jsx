@@ -43,6 +43,7 @@ export default function MaintenanceForm({ initial, onSubmit, submitting, submitL
       value: initial.valor ?? initial.value ?? initial.totalCost ?? "",
       status: (initial.status || "pendente").toLowerCase(),
       vehicleId:
+        initial.vehicleId ||
         initial.vehicle_id ||
         initial.vehicle?.id ||
         initial.vehicle?._id ||

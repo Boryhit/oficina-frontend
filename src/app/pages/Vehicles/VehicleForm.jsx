@@ -67,7 +67,7 @@ export default function VehicleForm({ initial, onSubmit, submitting, submitLabel
 
   const maintOptions = maintenances.map((m) => ({
     value: m.id || m._id,
-    label: `${m.descricao || m.description || "Manutenção"} — ${m.id || m._id}`,
+    label: `${m.descricao || m.description || m.services?.join?.(", ") || "Manutenção"} — ${m.id || m._id}`,
   }));
 
   return (
