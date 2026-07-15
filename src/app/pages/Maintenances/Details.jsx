@@ -10,6 +10,11 @@ import Loading from "../../components/Loading/Loading.jsx";
 import { useMaintenances } from "../../contexts/MaintenanceContext.jsx";
 import { formatCurrency, formatDate } from "../../utils/format.js";
 
+const maintenanceDescription = (row) =>
+  row.descricao || row.description || row.services?.join?.(", ") || "—";
+
+const maintenanceValue = (row) => row.valor ?? row.value ?? row.totalCost ?? 0;
+
 export default function MaintenanceDetails() {
   const { id } = useParams();
   const { getById, remove } = useMaintenances();
@@ -72,7 +77,7 @@ export default function MaintenanceDetails() {
           <div className="op-detail-grid">
             <div className="op-detail-item" style={{ gridColumn: "1 / -1" }}>
               <span className="op-detail-label">Descrição</span>
-              <span className="op-detail-value">{m.descricao || m.description || "—"}</span>
+              <span className="op-detail-value">{maintenanceDescription(m)}</span>
             </div>
             <div className="op-detail-item">
               <span className="op-detail-label">Data</span>
@@ -80,7 +85,7 @@ export default function MaintenanceDetails() {
             </div>
             <div className="op-detail-item">
               <span className="op-detail-label">Valor</span>
-              <span className="op-detail-value">{formatCurrency(m.valor || m.value)}</span>
+              <span className="op-detail-value">{formatCurrency(maintenanceValue(m))}</span>
             </div>
             <div className="op-detail-item">
               <span className="op-detail-label">Status</span>

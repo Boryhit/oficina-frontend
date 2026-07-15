@@ -12,6 +12,11 @@ import { useWorkshops } from "../../contexts/WorkshopContext.jsx";
 import { maintenanceService } from "../../services/maintenance.service.js";
 import { formatCurrency, formatDate } from "../../utils/format.js";
 
+const maintenanceDescription = (row) =>
+  row.descricao || row.description || row.services?.join?.(", ") || "—";
+
+const maintenanceValue = (row) => row.valor ?? row.value ?? row.totalCost ?? 0;
+
 export default function WorkshopDetails() {
   const { id } = useParams();
   const { getById, remove } = useWorkshops();
@@ -97,10 +102,10 @@ export default function WorkshopDetails() {
               <div className="op-detail-item" style={{ gridColumn: "1 / -1" }}>
                 <span className="op-detail-label">Especialidades</span>
                 <div className="op-row" style={{ marginTop: 4 }}>
-                  {(workshop.especialidades || workshop.specialties || []).map((s) => (
+                  {(workshop.especialidades || workshop.specialities || workshop.specialties || []).map((s) => (
                     <Badge key={s} color="blue">{s}</Badge>
                   ))}
-                  {!(workshop.especialidades?.length || workshop.specialties?.length) && "—"}
+                  {!(workshop.especialidades?.length || workshop.specialities?.length || workshop.specialties?.length) && "—"}
                 </div>
               </div>
             </div>
@@ -113,9 +118,9 @@ export default function WorkshopDetails() {
               pageSize={10}
               emptyLabel="Sem manutenções registradas para esta oficina"
               columns={[
-                { key: "descricao", label: "Descrição", render: (r) => r.descricao || r.description || "—" },
+                { key: "descricao", label: "Descrição", render: (r) => maintenanceDescription(r) },
                 { key: "data", label: "Data", render: (r) => formatDate(r.data || r.date) },
-                { key: "valor", label: "Valor", render: (r) => formatCurrency(r.valor || r.value) },
+                { key: "valor", label: "Valor", render: (r) => formatCurrency(maintenanceValue(r)) },
                 { key: "status", label: "Status", render: (r) => <Badge status={r.status} /> },
               ]}
             />

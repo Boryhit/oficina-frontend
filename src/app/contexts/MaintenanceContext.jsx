@@ -16,7 +16,7 @@ export function MaintenanceProvider({ children }) {
       const data = await maintenanceService.listar();
       setMaintenances(Array.isArray(data) ? data : data?.data || []);
     } catch (err) {
-      setError(err?.response?.data?.message || err.message);
+      setError(err?.response?.data?.message || err?.response?.data?.error || err.message);
       toast.error("Erro ao carregar manutenções");
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export function MaintenanceProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao cadastrar manutenção");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao cadastrar manutenção");
         return false;
       }
     },
@@ -55,7 +55,7 @@ export function MaintenanceProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao atualizar manutenção");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao atualizar manutenção");
         return false;
       }
     },
@@ -70,7 +70,7 @@ export function MaintenanceProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao remover manutenção");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao remover manutenção");
         return false;
       }
     },

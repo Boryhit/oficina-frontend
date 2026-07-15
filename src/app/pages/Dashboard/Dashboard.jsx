@@ -29,6 +29,11 @@ import { formatCurrency, formatDate } from "../../utils/format.js";
 const PIE_COLORS = ["#2563eb", "#f59e0b", "#10b981", "#ef4444", "#8b5cf6", "#0ea5e9", "#f97316"];
 const MONTHS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
+const maintenanceDescription = (row) =>
+  row.descricao || row.description || row.services?.join?.(", ") || "—";
+
+const maintenanceValue = (row) => row.valor ?? row.value ?? row.totalCost ?? 0;
+
 export default function Dashboard() {
   const { vehicles, fetchAll: fetchVehicles, loading: lv } = useVehicles();
   const { workshops, fetchAll: fetchWorkshops } = useWorkshops();
@@ -41,7 +46,7 @@ export default function Dashboard() {
   }, [fetchVehicles, fetchWorkshops, fetchMaint]);
 
   const totalValue = useMemo(
-    () => maintenances.reduce((sum, m) => sum + Number(m.valor || m.value || 0), 0),
+    () => maintenances.reduce((sum, m) => sum + Number(maintenanceValue(m)), 0),
     [maintenances],
   );
 
@@ -87,7 +92,7 @@ export default function Dashboard() {
       const b = buckets.find((x) => x.key === key);
       if (b) {
         b.total += 1;
-        b.valor += Number(m.valor || m.value || 0);
+        b.valor += Number(maintenanceValue(m));
       }
     });
     return buckets;
@@ -97,14 +102,14 @@ export default function Dashboard() {
   const costByWorkshop = useMemo(() => {
     const map = new Map();
     maintenances.forEach((m) => {
-      const wid = m.workshopId || m.oficinaId || m.workshop?.id;
+      const wid = m.workshopId || m.oficinaId || m.workshop?.id || m.workshop?._id;
       const wname =
         m.workshop?.nome ||
         m.workshop?.name ||
-        workshops.find((w) => w.id === wid)?.nome ||
-        workshops.find((w) => w.id === wid)?.name ||
+        workshops.find((w) => (w.id || w._id) === wid)?.nome ||
+        workshops.find((w) => (w.id || w._id) === wid)?.name ||
         "Não informado";
-      const val = Number(m.valor || m.value || 0);
+      const val = Number(maintenanceValue(m));
       map.set(wname, (map.get(wname) || 0) + val);
     });
     return Array.from(map, ([name, valor]) => ({ name, valor }))
@@ -116,12 +121,12 @@ export default function Dashboard() {
   const topVehicles = useMemo(() => {
     const map = new Map();
     maintenances.forEach((m) => {
-      const vid = m.vehicleId || m.veiculoId || m.vehicle?.id;
+      const vid = m.vehicleId || m.veiculoId || m.vehicle?.id || m.vehicle?._id;
       const vname =
         m.vehicle?.placa ||
         m.vehicle?.plate ||
-        vehicles.find((v) => v.id === vid)?.placa ||
-        vehicles.find((v) => v.id === vid)?.plate ||
+        vehicles.find((v) => (v.id || v._id) === vid)?.placa ||
+        vehicles.find((v) => (v.id || v._id) === vid)?.plate ||
         "Sem placa";
       map.set(vname, (map.get(vname) || 0) + 1);
     });
@@ -246,9 +251,9 @@ export default function Dashboard() {
             pageSize={5}
             rows={latestMaint}
             columns={[
-              { key: "descricao", label: "Descrição", render: (r) => r.descricao || r.description || "—" },
+              { key: "descricao", label: "Descrição", render: (r) => maintenanceDescription(r) },
               { key: "data", label: "Data", render: (r) => formatDate(r.data || r.date) },
-              { key: "valor", label: "Valor", render: (r) => formatCurrency(r.valor || r.value) },
+              { key: "valor", label: "Valor", render: (r) => formatCurrency(maintenanceValue(r)) },
               { key: "status", label: "Status", render: (r) => <Badge status={r.status} /> },
             ]}
           />

@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button.jsx";
 import ChipsInput from "../shared/ChipsInput.jsx";
 
 export default function WorkshopForm({ initial, onSubmit, submitting, submitLabel = "Salvar" }) {
-  const [form, setForm] = useState({ nome: "", endereco: "", especialidades: [] });
+  const [form, setForm] = useState({ nome: "", endereco: "", especialidades: [], vehiclesId: [] });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -12,7 +12,8 @@ export default function WorkshopForm({ initial, onSubmit, submitting, submitLabe
     setForm({
       nome: initial.nome || initial.name || "",
       endereco: initial.endereco || initial.address || "",
-      especialidades: initial.especialidades || initial.specialties || [],
+      especialidades: initial.especialidades || initial.specialities || initial.specialties || [],
+      vehiclesId: initial.vehiclesId || initial.vehicles?.map?.((v) => v.id || v._id) || [],
     });
   }, [initial]);
 
@@ -29,9 +30,9 @@ export default function WorkshopForm({ initial, onSubmit, submitting, submitLabe
     ev.preventDefault();
     if (!validate()) return;
     onSubmit({
-      nome: form.nome,
-      endereco: form.endereco,
-      especialidades: form.especialidades,
+      name: form.nome,
+      address: form.endereco,
+      specialities: form.especialidades,
     });
   };
 

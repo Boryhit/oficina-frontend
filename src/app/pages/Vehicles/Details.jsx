@@ -12,6 +12,11 @@ import { useVehicles } from "../../contexts/VehicleContext.jsx";
 import { maintenanceService } from "../../services/maintenance.service.js";
 import { formatCurrency, formatDate } from "../../utils/format.js";
 
+const maintenanceDescription = (row) =>
+  row.descricao || row.description || row.services?.join?.(", ") || "—";
+
+const maintenanceValue = (row) => row.valor ?? row.value ?? row.totalCost ?? 0;
+
 export default function VehicleDetails() {
   const { id } = useParams();
   const { getById, remove } = useVehicles();
@@ -125,13 +130,13 @@ export default function VehicleDetails() {
                 {
                   key: "descricao",
                   label: "Descrição",
-                  render: (r) => r.descricao || r.description || "—",
+                  render: (r) => maintenanceDescription(r),
                 },
                 { key: "data", label: "Data", render: (r) => formatDate(r.data || r.date) },
                 {
                   key: "valor",
                   label: "Valor",
-                  render: (r) => formatCurrency(r.valor || r.value),
+                  render: (r) => formatCurrency(maintenanceValue(r)),
                 },
                 { key: "status", label: "Status", render: (r) => <Badge status={r.status} /> },
               ]}

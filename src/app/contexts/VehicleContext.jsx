@@ -16,7 +16,7 @@ export function VehicleProvider({ children }) {
       const data = await vehicleService.listar();
       setVehicles(Array.isArray(data) ? data : data?.data || []);
     } catch (err) {
-      setError(err?.response?.data?.message || err.message);
+      setError(err?.response?.data?.message || err?.response?.data?.error || err.message);
       toast.error("Erro ao carregar veículos");
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export function VehicleProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao cadastrar veículo");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao cadastrar veículo");
         return false;
       }
     },
@@ -55,7 +55,7 @@ export function VehicleProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao atualizar veículo");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao atualizar veículo");
         return false;
       }
     },
@@ -70,7 +70,7 @@ export function VehicleProvider({ children }) {
         await fetchAll();
         return true;
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Erro ao remover veículo");
+        toast.error(err?.response?.data?.message || err?.response?.data?.error || "Erro ao remover veículo");
         return false;
       }
     },
