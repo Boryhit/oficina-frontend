@@ -42,14 +42,14 @@ export default function MaintenanceList() {
   }, [fetchAll, fetchVehicles, fetchWorkshops]);
 
   const vehicleLabel = (row) => {
-    if (row.vehicle) return row.vehicle.placa || row.vehicle.plate || row.vehicle.id;
-    const vid = row.vehicleId || row.vehicle_id;
+    if (row.vehicle) return row.vehicle.placa || row.vehicle.plate || row.vehicle.id || row.vehicle._id;
+    const vid = row.vehicleId || row.vehicle_id || row.vehicle?._id;
     const v = vehicles.find((x) => (x.id || x._id) === vid);
     return v ? v.placa || v.plate : vid || "—";
   };
   const workshopLabel = (row) => {
-    if (row.workshop) return row.workshop.nome || row.workshop.name || row.workshop.id;
-    const wid = row.workshopId || row.workshop_id;
+    if (row.workshop) return row.workshop.nome || row.workshop.name || row.workshop.id || row.workshop._id;
+    const wid = row.workshopId || row.workshop_id || row.workshop?._id;
     const w = workshops.find((x) => (x.id || x._id) === wid);
     return w ? w.nome || w.name : wid || "—";
   };
@@ -57,9 +57,9 @@ export default function MaintenanceList() {
   const filtered = useMemo(() => {
     return maintenances.filter((r) => {
       if (fStatus && r.status !== fStatus) return false;
-      const vid = r.vehicleId || r.vehicle_id || r.vehicle?.id;
+      const vid = r.vehicleId || r.vehicle_id || r.vehicle?.id || r.vehicle?._id;
       if (fVehicle && String(vid) !== String(fVehicle)) return false;
-      const wid = r.workshopId || r.workshop_id || r.workshop?.id;
+      const wid = r.workshopId || r.workshop_id || r.workshop?.id || r.workshop?._id;
       if (fWorkshop && String(wid) !== String(fWorkshop)) return false;
       const raw = r.data || r.date;
       const d = raw ? new Date(raw) : null;

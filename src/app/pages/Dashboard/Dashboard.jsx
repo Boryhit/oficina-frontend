@@ -102,12 +102,12 @@ export default function Dashboard() {
   const costByWorkshop = useMemo(() => {
     const map = new Map();
     maintenances.forEach((m) => {
-      const wid = m.workshopId || m.oficinaId || m.workshop?.id;
+      const wid = m.workshopId || m.oficinaId || m.workshop?.id || m.workshop?._id;
       const wname =
         m.workshop?.nome ||
         m.workshop?.name ||
-        workshops.find((w) => w.id === wid)?.nome ||
-        workshops.find((w) => w.id === wid)?.name ||
+        workshops.find((w) => (w.id || w._id) === wid)?.nome ||
+        workshops.find((w) => (w.id || w._id) === wid)?.name ||
         "Não informado";
       const val = Number(maintenanceValue(m));
       map.set(wname, (map.get(wname) || 0) + val);
@@ -121,12 +121,12 @@ export default function Dashboard() {
   const topVehicles = useMemo(() => {
     const map = new Map();
     maintenances.forEach((m) => {
-      const vid = m.vehicleId || m.veiculoId || m.vehicle?.id;
+      const vid = m.vehicleId || m.veiculoId || m.vehicle?.id || m.vehicle?._id;
       const vname =
         m.vehicle?.placa ||
         m.vehicle?.plate ||
-        vehicles.find((v) => v.id === vid)?.placa ||
-        vehicles.find((v) => v.id === vid)?.plate ||
+        vehicles.find((v) => (v.id || v._id) === vid)?.placa ||
+        vehicles.find((v) => (v.id || v._id) === vid)?.plate ||
         "Sem placa";
       map.set(vname, (map.get(vname) || 0) + 1);
     });
